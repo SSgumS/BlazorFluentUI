@@ -9,11 +9,11 @@ namespace BlazorFluentUI
 {
     public class ThemeProvider
     {
-        private ITheme _theme;
+        protected ITheme _theme;
 
         public ICollection<Theme> ThemeComponents { get; set; }
 
-        public ITheme Theme { get => _theme; }
+        public virtual ITheme Theme { get => _theme; }
 
         public event EventHandler<ThemeChangedArgs>? ThemeChanged;
 
@@ -24,7 +24,7 @@ namespace BlazorFluentUI
             ThemeChanged?.Invoke(this, new ThemeChangedArgs(_theme));
         }
 
-        public void UpdateTheme(IPalette palette)
+        public virtual void UpdateTheme(IPalette palette)
         {
             _theme = CreateTheme(palette);
             foreach (Theme? comp in ThemeComponents)
@@ -41,7 +41,7 @@ namespace BlazorFluentUI
         /// <param name="palette"></param>
         /// <param name="semanticColorOverrides"></param>
         /// <param name="semanticTextColorOverrides"></param>
-        public void UpdateTheme(IPalette palette, ISemanticColors semanticColorOverrides, ISemanticTextColors semanticTextColorOverrides)
+        public virtual void UpdateTheme(IPalette palette, ISemanticColors semanticColorOverrides, ISemanticTextColors semanticTextColorOverrides)
         {
             _theme = CreateTheme(palette);
             //foreach (var prop in typeof(ISemanticColors).GetProperties())
@@ -68,7 +68,7 @@ namespace BlazorFluentUI
             ThemeChanged?.Invoke(this, new ThemeChangedArgs(_theme));
         }
 
-        private static ITheme CreateTheme(IPalette? palette = null)
+        protected ITheme CreateTheme(IPalette? palette = null)
         {
             Theme? theme = new();
             theme.Palette = palette ?? new DefaultPalette();
@@ -83,7 +83,7 @@ namespace BlazorFluentUI
             return theme;
         }
 
-        private static ISemanticColors MakeSemanticColorsFromPalette(IPalette palette, bool isInverted)
+        protected ISemanticColors MakeSemanticColorsFromPalette(IPalette palette, bool isInverted)
         {
             return new SemanticColors()
             {
@@ -158,7 +158,7 @@ namespace BlazorFluentUI
             };
         }
 
-        private static ISemanticTextColors MakeSemanticTextColorsFromPalette(IPalette palette, bool isInverted)
+        protected ISemanticTextColors MakeSemanticTextColorsFromPalette(IPalette palette, bool isInverted)
         {
             return new SemanticTextColors()
             {
